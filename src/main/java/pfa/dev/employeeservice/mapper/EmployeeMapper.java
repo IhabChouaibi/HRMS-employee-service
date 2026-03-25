@@ -12,11 +12,14 @@ public interface EmployeeMapper {
 
         @Mappings({
                 @Mapping(source = "id", target = "id"),
+                @Mapping(source = "userId", target = "userId"),
                 @Mapping(source = "firstName", target = "firstName"),
                 @Mapping(source = "lastName", target = "lastName"),
                 @Mapping(source = "password", target = "password"),
                 @Mapping(source = "email", target = "email"),
                 @Mapping(source = "phone", target = "phone"),
+                @Mapping(source = "hireDate", target = "hireDate"),
+                @Mapping(source = "status", target = "status"),
                 @Mapping(source = "departmentId", target = "departmentId"),
                 @Mapping(source = "jobId", target = "jobId")
         })
@@ -30,6 +33,8 @@ public interface EmployeeMapper {
                 @Mapping(source = "email", target = "email"),
 
                 @Mapping(source = "phone", target = "phone"),
+                @Mapping(source = "hireDate", target = "hireDate"),
+                @Mapping(source = "status", target = "status"),
                 @Mapping(source = "departmentId", target = "departmentId"),
                 @Mapping(source = "jobId", target = "jobId"),
                 @Mapping(target = "userId", ignore = true)

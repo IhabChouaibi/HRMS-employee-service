@@ -11,24 +11,47 @@ import pfa.dev.employeeservice.dto.EmployeePageResponse;
 import pfa.dev.employeeservice.service.EmployeeService;
 
 @RestController
-@RequestMapping("/employees")
+@RequestMapping("/api/employees")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('HR') or hasRole('ADMIN')")
 public class EmployeeController {
     private final EmployeeService employeeService;
-    @GetMapping("/ping")
-    public String ping() {
-        return "Employee service is alive";
-    }
 
-    @PostMapping("/add")
+    @PostMapping("/create")
     public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto) {
-        return ResponseEntity.ok(employeeService.addEmployee(employeeDto));
+        return ResponseEntity.ok(employeeService.createEmployee(employeeDto));
     }
 
-    @GetMapping ("listEmployee")
-    public ResponseEntity<Page<EmployeePageResponse>> getAllEmployees(@RequestParam(defaultValue = "10") int size , @RequestParam(defaultValue = "0") int page) {
+    @GetMapping("/getall")
+    public ResponseEntity<Page<EmployeePageResponse>> getAllEmployees(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
         return ResponseEntity.ok(employeeService.getAllEmployees(PageRequest.of(page, size)));
+    }
 
+    @GetMapping("/get/{id}")
+    public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable Long id) {
+        return ResponseEntity.ok(employeeService.getEmployeeById(id));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable Long id, @RequestBody EmployeeDto employeeDto) {
+        return ResponseEntity.ok(employeeService.updateEmployee(id, employeeDto));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+        employeeService.deleteEmployee(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<EmployeePageResponse>> searchEmployees(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(employeeService.searchEmployees(keyword, PageRequest.of(page, size)));
     }
 }
