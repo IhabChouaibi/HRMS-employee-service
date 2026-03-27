@@ -13,16 +13,19 @@ import pfa.dev.employeeservice.service.EmployeeService;
 @RestController
 @RequestMapping("/api/employees")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('HR') or hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('HR', 'EMPLOYEE')")
+
 public class EmployeeController {
     private final EmployeeService employeeService;
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('HR')")
     public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto) {
         return ResponseEntity.ok(employeeService.createEmployee(employeeDto));
     }
 
     @GetMapping("/getall")
+    @PreAuthorize("hasRole('HR')")
     public ResponseEntity<Page<EmployeePageResponse>> getAllEmployees(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
@@ -36,17 +39,20 @@ public class EmployeeController {
     }
 
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('HR')")
     public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable Long id, @RequestBody EmployeeDto employeeDto) {
         return ResponseEntity.ok(employeeService.updateEmployee(id, employeeDto));
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('HR')")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployee(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasRole('HR')")
     public ResponseEntity<Page<EmployeePageResponse>> searchEmployees(
             @RequestParam String keyword,
             @RequestParam(defaultValue = "0") int page,
