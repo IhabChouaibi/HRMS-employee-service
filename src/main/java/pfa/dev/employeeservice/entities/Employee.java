@@ -4,10 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Column;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Entity
 @Data
@@ -15,7 +15,10 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, unique = true, length = 64)
     private String userId;
+
     private String password;
     private String firstName;
     private String lastName;

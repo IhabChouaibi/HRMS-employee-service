@@ -20,7 +20,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException exception) {
-        return buildResponse(HttpStatus.BAD_REQUEST, "Validation failed");
+        Map<String, String> fieldErrors = new LinkedHashMap<>();
+        exception.getBindingResult().getFieldErrors()
+                .forEach(error -> fieldErrors.put(error.getField(), error.getDefaultMessage()));
+
+        return buildResponse(HttpStatus.BAD_REQUEST, "Validation failed", fieldErrors);
     }
 
     @ExceptionHandler(RuntimeException.class)
@@ -29,10 +33,17 @@ public class GlobalExceptionHandler {
     }
 
     private ResponseEntity<Map<String, Object>> buildResponse(HttpStatus status, String message) {
+        return buildResponse(status, message, null);
+    }
+
+    private ResponseEntity<Map<String, Object>> buildResponse(HttpStatus status, String message, Map<String, ?> errors) {
         Map<String, Object> payload = new LinkedHashMap<>();
         payload.put("timestamp", Instant.now());
         payload.put("status", status.value());
         payload.put("message", message);
+        if (errors != null && !errors.isEmpty()) {
+            payload.put("errors", errors);
+        }
         return ResponseEntity.status(status).body(payload);
     }
 }

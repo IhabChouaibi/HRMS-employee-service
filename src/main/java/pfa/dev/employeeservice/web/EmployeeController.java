@@ -1,13 +1,17 @@
 package pfa.dev.employeeservice.web;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import pfa.dev.employeeservice.dto.CreateEmployeeRequest;
 import pfa.dev.employeeservice.dto.EmployeeDto;
+import pfa.dev.employeeservice.dto.EmployeeLookupResponse;
 import pfa.dev.employeeservice.dto.EmployeePageResponse;
+import pfa.dev.employeeservice.dto.UpdateEmployeeRequest;
 import pfa.dev.employeeservice.service.EmployeeService;
 
 @RestController
@@ -20,8 +24,8 @@ public class EmployeeController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('HR')")
-    public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto) {
-        return ResponseEntity.ok(employeeService.createEmployee(employeeDto));
+    public ResponseEntity<EmployeeDto> createEmployee(@Valid @RequestBody CreateEmployeeRequest request) {
+        return ResponseEntity.ok(employeeService.createEmployee(request));
     }
 
     @GetMapping("/getall")
@@ -38,9 +42,14 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.getEmployeeById(id));
     }
 
+    @GetMapping("/by-user-id/{userId}")
+    public ResponseEntity<EmployeeLookupResponse> getEmployeeByUserId(@PathVariable String userId) {
+        return ResponseEntity.ok(employeeService.getEmployeeByUserId(userId));
+    }
+
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('HR')")
-    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable Long id, @RequestBody EmployeeDto employeeDto) {
+    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable Long id, @RequestBody UpdateEmployeeRequest employeeDto) {
         return ResponseEntity.ok(employeeService.updateEmployee(id, employeeDto));
     }
 

@@ -17,7 +17,6 @@ import java.time.LocalDate;
 public class EmployeeDto {
     private Long id;
     private String userId;
-    private String password;
 
     private String firstName;
     private String lastName;
@@ -26,6 +25,6 @@ public class EmployeeDto {
     private LocalDate hireDate;
     private String status;
 
-    private Long departmentId;
-    private Long jobId;
+    private String jobTitle;
+    private String departmentCode;
 }

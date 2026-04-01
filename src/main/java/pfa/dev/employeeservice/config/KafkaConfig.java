@@ -9,10 +9,19 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaConfig {
 
     public static final String EMPLOYEE_CREATED = "employee.created";
+    public static final String EMPLOYEE_DELETED = "employee.deleted";
 
     @Bean
     public NewTopic employeeCreatedTopic() {
         return TopicBuilder.name(EMPLOYEE_CREATED)
+                .partitions(1)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    public NewTopic employeeDeletedTopic() {
+        return TopicBuilder.name(EMPLOYEE_DELETED)
                 .partitions(1)
                 .replicas(1)
                 .build();
